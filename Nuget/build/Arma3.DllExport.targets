@@ -26,9 +26,6 @@
     <ArmaDllExportTask FileName="$(ArmaDllExportTargetPath)"
                        FrameworkPath="$(ArmaDllExportFrameworkPath)"
                        SdkPath="$(ArmaDllExportSdkPath)"
-                       WrapperNamespace="$(ArmaDllExportWrapperNamespace)"
-                       WrapperTypeName="$(ArmaDllExportWrapperTypeName)"
-                       WrapperMethodName="$(ArmaDllExportWrapperMethodName)"
                        KeepIl="$(ArmaDllExportKeepIl)"/>
   </Target>
 </Project>
