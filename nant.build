@@ -53,9 +53,9 @@
 			</imports>
 			<attributes>
 				<attribute type="AssemblyTitleAttribute" value="Arma3.DllExport" />
-				<attribute type="AssemblyCompanyAttribute" value="Maca134" />
+				<attribute type="AssemblyCompanyAttribute" value="Ni1kko & Maca134" />
 				<attribute type="AssemblyProductAttribute" value="Arma3.DllExport" />
-				<attribute type="AssemblyCopyrightAttribute" value="Copyright 2017" />
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright 2025" />
 				<attribute type="AssemblyVersionAttribute" value="${versionString}" />
 				<attribute type="AssemblyFileVersionAttribute" value="${versionString}" />
 			</attributes>
@@ -70,9 +70,9 @@
 			</imports>
 			<attributes>
 				<attribute type="AssemblyTitleAttribute" value="Arma3.DllExport.MsBuild" />
-				<attribute type="AssemblyCompanyAttribute" value="Maca134" />
+				<attribute type="AssemblyCompanyAttribute" value="Ni1kko & Maca134" />
 				<attribute type="AssemblyProductAttribute" value="Arma3.DllExport.MsBuild" />
-				<attribute type="AssemblyCopyrightAttribute" value="Copyright 2017" />
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright 2025" />
 				<attribute type="AssemblyVersionAttribute" value="${versionString}" />
 				<attribute type="AssemblyFileVersionAttribute" value="${versionString}" />
 			</attributes>

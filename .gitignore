@@ -6,3 +6,8 @@
 /packages
 /TestConsole/bin
 /TestConsole/obj
+/Arma3_TestExtension/.vs
+/Arma3.DllExport/.vs
+/Arma3_TestExtension/bin
+/Arma3_TestExtension/obj
+/Arma3_TestExtension/packages

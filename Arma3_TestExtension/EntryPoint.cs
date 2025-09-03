@@ -1,24 +1,19 @@
-# Arma3.DllExport - [Download](https://www.nuget.org/packages/Arma3.DllExport/)
-Simplify C# extensions for ARMA
+﻿using Arma3.DllExport;
 
-```PM> Install-Package Arma3.DllExport```
-
-```csharp
 namespace TestExtension
 {
     internal class EntryPoint
     {
         [ArmaDllExport(ArmaExport.RVExtensionVersion)]
-        public static string Version()
+        public static string RVExtensionVersion()
         {
             return "TestExtension v1.0 - LOADED!";
         }
 
         [ArmaDllExport(ArmaExport.RVExtension)]
-        public static string Invoke(string input, int size)
+        public static string RVExtension(string input)
         {
             return input;
         }
     }
 }
-```

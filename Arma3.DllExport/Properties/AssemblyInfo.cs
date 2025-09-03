@@ -12,9 +12,9 @@ using System.Reflection;
 //------------------------------------------------------------------------------
 
 [assembly: AssemblyTitleAttribute("Arma3.DllExport")]
-[assembly: AssemblyCompanyAttribute("Maca134")]
+[assembly: AssemblyCompany("Ni1kko")]
 [assembly: AssemblyProductAttribute("Arma3.DllExport")]
-[assembly: AssemblyCopyrightAttribute("Copyright 2017")]
-[assembly: AssemblyVersionAttribute("0.0.2.7")]
-[assembly: AssemblyFileVersionAttribute("0.0.2.7")]
+[assembly: AssemblyCopyright("Copyright 2025")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
 

@@ -46,9 +46,6 @@ namespace Arma3.DllExport.MsBuild
                 return true;
             }
             dll.KeepIl = KeepIl;
-            dll.WrapperNamespace = WrapperNamespace;
-            dll.WrapperTypeName = WrapperTypeName;
-            dll.WrapperMethodName = WrapperMethodName;
             dll.Log = s => Log.LogMessage(s);
             try
             {
