@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Arma3.DllExport</id>
-    <version>0.1.0.1</version>
+    <version>0.1.0.2</version>
     <title>Arma3.DllExport</title>
     <authors>Ni1kko</authors>
     <license type="expression">MIT</license>
@@ -13,12 +13,16 @@
     <copyright>Copyright © Ni1kko 2025</copyright>
     <tags>Arma3 Arma C# DllExport Extension</tags>
     <developmentDependency>true</developmentDependency>
+    
+    <dependencies>
+      <group targetFramework=".NETFramework4.8.1" />
+    </dependencies>
+    
   </metadata>
   <files>
-    <file src="build\Arma3.DllExport.dll" target="lib\net472\" />
+    <file src="build\Arma3.DllExport.dll" target="lib\net481\" />
 
     <file src="build\Arma3.DllExport.MsBuild.dll" target="build\" />
     <file src="build\Arma3.DllExport.targets" target="build\" />
-    
-    </files>
+  </files>
 </package>
