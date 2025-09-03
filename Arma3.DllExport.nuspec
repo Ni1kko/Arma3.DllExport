@@ -2,22 +2,23 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Arma3.DllExport</id>
-    <version>0.1.0.0</version>
+    <version>0.1.0.1</version>
     <title>Arma3.DllExport</title>
     <authors>Ni1kko</authors>
-    <licenseUrl>https://github.com/Ni1kko/Arma3.DllExport/blob/master/LICENSE.md</licenseUrl>
+    <license type="expression">MIT</license>
     <projectUrl>https://github.com/Ni1kko/Arma3.DllExport</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simplify C# extensions for ARMA</description>
     <releaseNotes>See Github</releaseNotes>
-    <copyright>Copyright 2025</copyright>
+    <copyright>Copyright © Ni1kko 2025</copyright>
     <tags>Arma3 Arma C# DllExport Extension</tags>
-    </metadata>
+    <developmentDependency>true</developmentDependency>
+  </metadata>
   <files>
     <file src="build\Arma3.DllExport.dll" target="lib\net472\" />
 
     <file src="build\Arma3.DllExport.MsBuild.dll" target="build\" />
     <file src="build\Arma3.DllExport.targets" target="build\" />
-    <file src="build\Mono.Cecil.dll" target="build\" />
-  </files>
+    
+    </files>
 </package>
