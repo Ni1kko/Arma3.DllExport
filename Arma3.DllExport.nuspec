@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Arma3.DllExport</id>
+    <version>0.0.2.6</version>
+    <title>Arma3.DllExport</title>
+    <authors>Maca134</authors>
+    <licenseUrl>https://github.com/maca134/Arma3.DllExport/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/maca134/Arma3.DllExport</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simplify C# extensions for ARMA</description>
+    <releaseNotes>See Github</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Data</tags>
+    <references>
+      <reference file="Arma3.DllExport.dll" />
+    </references>
+  </metadata>
+  <files>
+    <file src="build\**" target="\" />
+  </files>
+</package>

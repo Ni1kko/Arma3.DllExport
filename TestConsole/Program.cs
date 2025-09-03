@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Maca134.Arma.DllExport.MsBuild;
+using Arma3.DllExport.MsBuild;
 
 namespace TestConsole
 {

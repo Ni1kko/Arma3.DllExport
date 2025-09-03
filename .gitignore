@@ -1,0 +1,8 @@
+/Arma3.DllExport/obj
+/Arma3.DllExport/bin
+/Arma3.DllExport.MsBuild/obj
+/.vs
+/Arma3.DllExport.MsBuild/bin
+/packages
+/TestConsole/bin
+/TestConsole/obj

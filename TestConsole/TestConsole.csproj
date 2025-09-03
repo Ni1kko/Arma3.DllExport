@@ -48,9 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Maca134.Arma.DllExport.MsBuild\Maca134.Arma.DllExport.MsBuild.csproj">
+    <ProjectReference Include="..\Arma3.DllExport.MsBuild\Arma3.DllExport.MsBuild.csproj">
       <Project>{203924dd-b8d3-4d38-92b3-b01a5acb778d}</Project>
-      <Name>Maca134.Arma.DllExport.MsBuild</Name>
+      <Name>Arma3.DllExport.MsBuild</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

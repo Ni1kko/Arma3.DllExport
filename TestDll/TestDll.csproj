@@ -42,11 +42,11 @@
     <Compile Include="SomeClass.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Maca134.Arma.DllExport\Maca134.Arma.DllExport.csproj">
+    <ProjectReference Include="..\Arma3.DllExport\Arma3.DllExport.csproj">
       <Project>{71999739-5953-4c86-b8a1-22f212171995}</Project>
-      <Name>Maca134.Arma.DllExport</Name>
+      <Name>Arma3.DllExport</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="../Maca134.Arma.DllExport.MsBuild/bin/$(Configuration)/Maca134.Arma.DllExport.targets" />
+  <Import Project="../Arma3.DllExport.MsBuild/bin/$(Configuration)/Arma3.DllExport.targets" />
 </Project>

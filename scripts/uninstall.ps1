@@ -1,6 +1,6 @@
 param($installPath, $toolsPath, $package, $project)
 
-$targetFileName = 'Maca134.Arma.DllExport.targets'
+$targetFileName = 'Arma3.DllExport.targets'
 
 $projects = Get-DllExportMsBuildProjectsByFullName($project.FullName)
 

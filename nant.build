@@ -1,4 +1,4 @@
-<project name="Maca134.Arma.DllExport" default="release" basedir=".">
+<project name="Arma3.DllExport" default="release" basedir=".">
 	<property name="configuration" value="Release" />
 	<property name="basepath" value="${project::get-base-directory()}" />
 	<property name="buildpath" value="${project::get-base-directory()}/build" />
@@ -45,39 +45,39 @@
 	</target>
 
 	<target name="version.set" depends="version.increment">
-		<attrib file="${basepath}/Maca134.Arma.DllExport/Properties/AssemblyInfo.cs" readonly="false" />
-		<asminfo output="${basepath}/Maca134.Arma.DllExport/Properties/AssemblyInfo.cs" language="CSharp">
+		<attrib file="${basepath}/Arma3.DllExport/Properties/AssemblyInfo.cs" readonly="false" />
+		<asminfo output="${basepath}/Arma3.DllExport/Properties/AssemblyInfo.cs" language="CSharp">
 			<imports>
 				<import namespace="System" />
 				<import namespace="System.Reflection" />
 			</imports>
 			<attributes>
-				<attribute type="AssemblyTitleAttribute" value="Maca134.Arma.DllExport" />
+				<attribute type="AssemblyTitleAttribute" value="Arma3.DllExport" />
 				<attribute type="AssemblyCompanyAttribute" value="Maca134" />
-				<attribute type="AssemblyProductAttribute" value="Maca134.Arma.DllExport" />
+				<attribute type="AssemblyProductAttribute" value="Arma3.DllExport" />
 				<attribute type="AssemblyCopyrightAttribute" value="Copyright 2017" />
 				<attribute type="AssemblyVersionAttribute" value="${versionString}" />
 				<attribute type="AssemblyFileVersionAttribute" value="${versionString}" />
 			</attributes>
 		</asminfo>
-		<attrib file="${basepath}/Maca134.Arma.DllExport/Properties/AssemblyInfo.cs" readonly="true" />
+		<attrib file="${basepath}/Arma3.DllExport/Properties/AssemblyInfo.cs" readonly="true" />
 
-		<attrib file="${basepath}/Maca134.Arma.DllExport.MsBuild/Properties/AssemblyInfo.cs" readonly="false" />
-		<asminfo output="${basepath}/Maca134.Arma.DllExport.MsBuild/Properties/AssemblyInfo.cs" language="CSharp">
+		<attrib file="${basepath}/Arma3.DllExport.MsBuild/Properties/AssemblyInfo.cs" readonly="false" />
+		<asminfo output="${basepath}/Arma3.DllExport.MsBuild/Properties/AssemblyInfo.cs" language="CSharp">
 			<imports>
 				<import namespace="System" />
 				<import namespace="System.Reflection" />
 			</imports>
 			<attributes>
-				<attribute type="AssemblyTitleAttribute" value="Maca134.Arma.DllExport.MsBuild" />
+				<attribute type="AssemblyTitleAttribute" value="Arma3.DllExport.MsBuild" />
 				<attribute type="AssemblyCompanyAttribute" value="Maca134" />
-				<attribute type="AssemblyProductAttribute" value="Maca134.Arma.DllExport.MsBuild" />
+				<attribute type="AssemblyProductAttribute" value="Arma3.DllExport.MsBuild" />
 				<attribute type="AssemblyCopyrightAttribute" value="Copyright 2017" />
 				<attribute type="AssemblyVersionAttribute" value="${versionString}" />
 				<attribute type="AssemblyFileVersionAttribute" value="${versionString}" />
 			</attributes>
 		</asminfo>
-		<attrib file="${basepath}/Maca134.Arma.DllExport.MsBuild/Properties/AssemblyInfo.cs" readonly="true" />
+		<attrib file="${basepath}/Arma3.DllExport.MsBuild/Properties/AssemblyInfo.cs" readonly="true" />
 	</target>
 
 	<target name="clean" depends="version.set">
@@ -94,7 +94,7 @@
 
 	<target name="build" depends="clean">
 		<exec program="${msbuildpath}">
-			<arg line='"${basepath}/Maca134.Arma.DllExport.sln"' />
+			<arg line='"${basepath}/Arma3.DllExport.sln"' />
 			<arg line="/property:Configuration=${configuration}" />
 			<arg value="/target:Rebuild" />
 			<arg value="/verbosity:normal" />
@@ -105,13 +105,13 @@
 	<target name="copy" depends="build">
 		<mkdir dir="${buildpath}/lib/net" />
 		<copy todir="${buildpath}/lib/net">
-			<fileset basedir="${basepath}/Maca134.Arma.DllExport/bin/${configuration}">
+			<fileset basedir="${basepath}/Arma3.DllExport/bin/${configuration}">
 				<include name="**/*.dll" />
 			</fileset>
 		</copy>
 		<mkdir dir="${buildpath}/tools" />
 		<copy todir="${buildpath}/tools">
-			<fileset basedir="${basepath}/Maca134.Arma.DllExport.MsBuild/bin/${configuration}">
+			<fileset basedir="${basepath}/Arma3.DllExport.MsBuild/bin/${configuration}">
 				<include name="**/*.pdb" />
 				<include name="**/*.dll" />
 				<include name="**/*.targets" />
@@ -144,18 +144,18 @@
 
 	<target name="sign" depends="commit">
 		<exec program="${signtool.path}">
-			<arg line="sign /v /d Maca134.Arma.DllExport /f &quot;${signtool.key}&quot; /p ${keypassword} /tr &quot;${signtool.url}&quot; &quot;${buildpath}\lib\net\Maca134.Arma.DllExport.dll&quot;" />
+			<arg line="sign /v /d Arma3.DllExport /f &quot;${signtool.key}&quot; /p ${keypassword} /tr &quot;${signtool.url}&quot; &quot;${buildpath}\lib\net\Arma3.DllExport.dll&quot;" />
 		</exec>
 		<exec program="${signtool.path}">
-			<arg line="sign /v /d Maca134.Arma.DllExport.MsBuild /f &quot;${signtool.key}&quot; /p ${keypassword} /tr &quot;${signtool.url}&quot; &quot;${buildpath}\tools\Maca134.Arma.DllExport.MsBuild.dll&quot; &quot;${buildpath}\tools\Mono.Cecil.dll&quot;" />
+			<arg line="sign /v /d Arma3.DllExport.MsBuild /f &quot;${signtool.key}&quot; /p ${keypassword} /tr &quot;${signtool.url}&quot; &quot;${buildpath}\tools\Arma3.DllExport.MsBuild.dll&quot; &quot;${buildpath}\tools\Mono.Cecil.dll&quot;" />
 		</exec>
 	</target>
 
 	<target name="package" depends="sign">
-		<xmlpoke file="${basepath}/Maca134.Arma.DllExport.nuspec" xpath="/package/metadata/version" value="${versionString}" />
+		<xmlpoke file="${basepath}/Arma3.DllExport.nuspec" xpath="/package/metadata/version" value="${versionString}" />
 		<exec program="${nuget}">
 			<arg line="pack" />
-			<arg line="&quot;${basepath}/Maca134.Arma.DllExport.nuspec&quot;" />
+			<arg line="&quot;${basepath}/Arma3.DllExport.nuspec&quot;" />
 			<arg line="-Version ${versionString}" />
 			<arg line="-OutputDirectory &quot;${packagepath}&quot;" />
 		</exec>
@@ -164,7 +164,7 @@
 	<target name="release" depends="package">
 		<exec program="${nuget}">
 			<arg line="push" />
-			<arg line="&quot;${packagepath}/Maca134.Arma.DllExport.${versionString}.nupkg&quot;" />
+			<arg line="&quot;${packagepath}/Arma3.DllExport.${versionString}.nupkg&quot;" />
 			<arg line="-Source https://www.nuget.org/api/v2/package" />
 		</exec>
 	</target>

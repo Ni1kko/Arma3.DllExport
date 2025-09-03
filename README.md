@@ -1,7 +1,7 @@
-# Maca134.Arma.DllExport - [Download](https://www.nuget.org/packages/Maca134.Arma.DllExport/)
+# Arma3.DllExport - [Download](https://www.nuget.org/packages/Arma3.DllExport/)
 Simplify C# extensions for ARMA
 
-```PM> Install-Package Maca134.Arma.DllExport```
+```PM> Install-Package Arma3.DllExport```
 
 [![Demo](https://img.youtube.com/vi/MXRBckxwqEw/0.jpg)](http://www.youtube.com/watch?v=MXRBckxwqEw)
 

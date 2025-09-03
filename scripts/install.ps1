@@ -1,6 +1,6 @@
 param($installPath, $toolsPath, $package, $project)
 
-$targetFileName = 'Maca134.Arma.DllExport.targets'
+$targetFileName = 'Arma3.DllExport.targets'
 $targetFileName = [IO.Path]::Combine($toolsPath, $targetFileName)
 $targetUri = New-Object Uri -ArgumentList $targetFileName, [UriKind]::Absolute
 
@@ -16,7 +16,7 @@ $projectCollection = $msBuildV4.GetType('Microsoft.Build.Evaluation.ProjectColle
 # change the reference to RGiesecke.DllExport.Metadata.dll to not be copied locally
 
 $project.Object.References | ? { 
-    $_.Name -ieq "Maca134.Arma.DllExport" 
+    $_.Name -ieq "Arma3.DllExport" 
 } | % {
     if($_ | Get-Member | ? {$_.Name -eq "CopyLocal"}){
         $_.CopyLocal = $false
@@ -29,7 +29,7 @@ $projects |  % {
 
     # remove imports of RGiesecke.DllExport.targets from this project 
     $currentProject.Xml.Imports | ? {
-        return ("Maca134.Arma.DllExport.targets" -ieq [IO.Path]::GetFileName($_.Project))
+        return ("Arma3.DllExport.targets" -ieq [IO.Path]::GetFileName($_.Project))
     }  | % {  
         $currentProject.Xml.RemoveChild($_);
     }
