@@ -1,4 +1,7 @@
-﻿using System.Security.Permissions;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Security.Permissions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -8,6 +11,38 @@ namespace Arma3.DllExport.MsBuild
     [PermissionSet(SecurityAction.InheritanceDemand, Name = "FullTrust")]
     public class ArmaDllExportTask : AppDomainIsolatedTask
     {
+        /// <summary>
+        /// This static constructor runs once when the class is first used.
+        /// It subscribes to the AssemblyResolve event, which fires when the runtime
+        /// fails to find a required DLL.
+        /// </summary>
+        static ArmaDllExportTask()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveCecil;
+        }
+
+        /// <summary>
+        /// This method is called when the runtime can't find an assembly.
+        /// It checks if the missing assembly is Mono.Cecil and, if so, loads it
+        /// from the same directory as our task's DLL.
+        /// </summary>
+        private static Assembly ResolveCecil(object sender, ResolveEventArgs args)
+        {
+            // We only care about Mono.Cecil
+            if (!args.Name.StartsWith("Mono.Cecil,"))
+            {
+                return null;
+            }
+
+            // Get the directory where our task DLL (Arma3.DllExport.MsBuild.dll) is located.
+            var assemblyPath = typeof(ArmaDllExportTask).Assembly.Location;
+            var assemblyDir = Path.GetDirectoryName(assemblyPath);
+            var cecilPath = Path.Combine(assemblyDir, "Mono.Cecil.dll");
+
+            // Load and return the assembly from that path.
+            return File.Exists(cecilPath) ? Assembly.LoadFrom(cecilPath) : null;
+        }
+
         [Required]
         public string FileName { get; set; }
 
@@ -16,12 +51,6 @@ namespace Arma3.DllExport.MsBuild
 
         [Required]
         public string SdkPath { get; set; }
-
-        public string WrapperNamespace { get; set; } = "Arma3.DllExport";
-
-        public string WrapperTypeName { get; set; } = "DllExportWrapper";
-
-        public string WrapperMethodName { get; set; } = "RVExtension";
 
         public bool KeepIl { get; set; }
 

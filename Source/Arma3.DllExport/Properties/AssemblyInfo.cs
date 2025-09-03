@@ -15,6 +15,6 @@ using System.Reflection;
 [assembly: AssemblyCompany("Ni1kko")]
 [assembly: AssemblyProductAttribute("Arma3.DllExport")]
 [assembly: AssemblyCopyright("Copyright 2025")]
-[assembly: AssemblyVersion("0.1.0.3")]
-[assembly: AssemblyFileVersion("0.1.0.3")]
+[assembly: AssemblyVersion("0.1.0.4")]
+[assembly: AssemblyFileVersion("0.1.0.4")]
 
