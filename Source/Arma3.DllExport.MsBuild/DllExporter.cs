@@ -52,14 +52,19 @@ namespace Arma3.DllExport.MsBuild
         {
             Target = target;
 
-            // Create an assembly resolver and tell it to search for DLLs in the same
-            // directory as the DLL we are processing (e.g., TestExtension\bin\Release).
+            // Read the entire DLL into a memory stream to release the file lock.
+            var fileBytes = File.ReadAllBytes(target);
+            var memoryStream = new MemoryStream(fileBytes);
+
+            // Create an assembly resolver to find dependencies.
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(target));
+
+            // Create ReaderParameters that use our custom resolver.
             var readerParameters = new ReaderParameters { AssemblyResolver = resolver };
 
-            // Read the module using our custom resolver.
-            Module = ModuleDefinition.ReadModule(target, readerParameters);
+            // Read the module from the memory stream using our resolver.
+            Module = ModuleDefinition.ReadModule(memoryStream, readerParameters);
 
             if (Module.Kind != ModuleKind.Dll)
                 throw new DllExporterException("Only supports DLLs");
