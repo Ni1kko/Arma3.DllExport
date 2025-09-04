@@ -1,0 +1,10 @@
+/Source/Arma3.ExtensionTester/obj
+/Source/Arma3.ExtensionTester/bin
+/Source/Arma3.ExtensionTester/.vs
+Nuget/build/Mono.Cecil.Rocks.pdb
+Nuget/build/Mono.Cecil.Rocks.dll
+Nuget/build/Mono.Cecil.Pdb.pdb
+Nuget/build/Mono.Cecil.Pdb.dll
+Nuget/build/Mono.Cecil.pdb
+Nuget/build/Mono.Cecil.Mdb.pdb
+Nuget/build/Mono.Cecil.Mdb.dll
