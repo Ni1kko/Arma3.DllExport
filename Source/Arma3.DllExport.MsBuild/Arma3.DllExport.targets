@@ -14,15 +14,16 @@
     </BuildDependsOn>
   </PropertyGroup>
 
-  <UsingTask TaskName="Arma3.DllExport.MSBuild.ArmaDllExportTask" 
-             AssemblyFile="Arma3.DllExport.MSBuild.dll" />
-  
-  <Target Name="Arma3DllExport" DependsOnTargets="GetFrameworkPaths">
+  <UsingTask TaskName="Arma3.DllExport.MsBuild.ArmaDllExportTask"
+             AssemblyFile="Arma3.DllExport.MsBuild.dll" />
+
+  <Target Name="Arma3DllExport" DependsOnTargets="GetFrameworkPaths" AfterTargets="FodyTarget">
     <PropertyGroup>
       <ArmaDllExportTargetPath Condition="'$(ArmaDllExportTargetPath)' == ''">$(TargetPath)</ArmaDllExportTargetPath>
       <ArmaDllExportFrameworkPath Condition="'$(ArmaDllExportFrameworkPath)' == ''">$(TargetedFrameworkDir)</ArmaDllExportFrameworkPath>
       <ArmaDllExportSdkPath Condition="'$(ArmaDllExportSdkPath)' == ''">$(TargetFrameworkSDKToolsDirectory)</ArmaDllExportSdkPath>
     </PropertyGroup>
+
     <ArmaDllExportTask FileName="$(ArmaDllExportTargetPath)"
                        FrameworkPath="$(ArmaDllExportFrameworkPath)"
                        SdkPath="$(ArmaDllExportSdkPath)"

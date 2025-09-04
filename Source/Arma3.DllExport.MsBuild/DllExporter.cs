@@ -52,20 +52,14 @@ namespace Arma3.DllExport.MsBuild
         {
             Target = target;
 
-            // Read the entire DLL into a memory stream. This loads the file's bytes
-            // and immediately closes the file, releasing the lock.
-            var fileBytes = File.ReadAllBytes(target);
-            var memoryStream = new MemoryStream(fileBytes);
-
-            // We still need our assembly resolver from the previous fix.
+            // Create an assembly resolver and tell it to search for DLLs in the same
+            // directory as the DLL we are processing (e.g., TestExtension\bin\Release).
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(target));
-
-            // We pass the resolver to the ReaderParameters.
             var readerParameters = new ReaderParameters { AssemblyResolver = resolver };
 
-            // Read the module from the memory stream instead of the file path.
-            Module = ModuleDefinition.ReadModule(memoryStream, readerParameters);
+            // Read the module using our custom resolver.
+            Module = ModuleDefinition.ReadModule(target, readerParameters);
 
             if (Module.Kind != ModuleKind.Dll)
                 throw new DllExporterException("Only supports DLLs");

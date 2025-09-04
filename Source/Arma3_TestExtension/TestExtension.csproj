@@ -106,8 +106,5 @@
     <Error Condition="!Exists('..\packages\Arma3.DllExport.0.1.0.6\build\Arma3.DllExport.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Arma3.DllExport.0.1.0.6\build\Arma3.DllExport.targets'))" />
   </Target>
   <Import Project="packages\Costura.Fody.6.0.0\build\Costura.Fody.targets" Condition="Exists('packages\Costura.Fody.6.0.0\build\Costura.Fody.targets')" />
-  <Target Name="CopyPDBForDllExport" AfterTargets="CoreCompile" BeforeTargets="Arma3DllExport">
-    <Copy SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
-  </Target>
   <Import Project="..\packages\Arma3.DllExport.0.1.0.6\build\Arma3.DllExport.targets" Condition="Exists('..\packages\Arma3.DllExport.0.1.0.6\build\Arma3.DllExport.targets')" />
 </Project>
