@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Arma3.DllExport</id>
-    <version>0.1.0.5</version>
+    <version>0.1.0.6</version>
     <title>Arma3.DllExport</title>
     <authors>Ni1kko</authors>
     <license type="expression">MIT</license>

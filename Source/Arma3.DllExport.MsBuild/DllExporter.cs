@@ -51,13 +51,32 @@ namespace Arma3.DllExport.MsBuild
         public DllExporter(string target)
         {
             Target = target;
-            Module = ModuleDefinition.ReadModule(Target, new ReaderParameters { ReadSymbols = true });
+
+            // Read the entire DLL into a memory stream. This loads the file's bytes
+            // and immediately closes the file, releasing the lock.
+            var fileBytes = File.ReadAllBytes(target);
+            var memoryStream = new MemoryStream(fileBytes);
+
+            // We still need our assembly resolver from the previous fix.
+            var resolver = new DefaultAssemblyResolver();
+            resolver.AddSearchDirectory(Path.GetDirectoryName(target));
+
+            // We pass the resolver to the ReaderParameters and explicitly disable symbol reading.
+            var readerParameters = new ReaderParameters
+            {
+                AssemblyResolver = resolver,
+                ReadSymbols = false
+            };
+
+            // Read the module from the memory stream instead of the file path.
+            Module = ModuleDefinition.ReadModule(memoryStream, readerParameters);
+
             if (Module.Kind != ModuleKind.Dll)
                 throw new DllExporterException("Only supports DLLs");
             if (Cpu == CpuPlatform.AnyCpu)
                 throw new DllExporterException("AnyCpu DLLs are not supported. Please target x86 or x64.");
 
-            // New Logic: Find ALL methods with the attribute
+            // Find all methods with the attribute
             foreach (var typeDefinition in Module.Types)
             {
                 foreach (var method in typeDefinition.Methods)
