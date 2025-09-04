@@ -54,6 +54,10 @@ namespace Arma3.DllExport.MsBuild
 
         public bool KeepIl { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool Execute()
         {
             DllExporter.IldasmPath = SdkPath;

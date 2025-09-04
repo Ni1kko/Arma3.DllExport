@@ -1,30 +1,34 @@
 ﻿using Arma3.DllExport;
+using System.Text;
 
 namespace TestExtension
 {
-    // Making the class public and static is a common convention for utility classes like this.
     public static class EntryPoint
     {
         [ArmaDllExport(ArmaExport.RVExtensionVersion)]
-        public static string RVExtensionVersion()
+        public static void RVExtensionVersion(StringBuilder output, int outputSize)
         {
-            return "TestExtension v1.0 - LOADED!";
+            // Write the response directly into the buffer provided by Arma 3.
+            output.Append("RVExtensionVersion -  v0.1.0.8");
         }
 
         [ArmaDllExport(ArmaExport.RVExtension)]
-        public static string RVExtension(string input)
+        public static void RVExtension(StringBuilder output, int outputSize, string function)
         {
-            // Use a switch statement to handle different commands from Arma 3.
-            switch (input.ToLower())
+            // Write the response directly into the buffer.
+            switch (function.ToLower())
             {
                 case "ping":
-                    return "pong";
+                    output.Append("pong");
+                    break;
 
                 case "getservertime":
-                    return System.DateTime.Now.ToString("HH:mm:ss");
+                    output.Append(System.DateTime.Now.ToString("HH:mm:ss"));
+                    break;
 
                 default:
-                    return "Unknown command";
+                    output.Append("Unknown command");
+                    break;
             }
         }
     }

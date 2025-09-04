@@ -4,20 +4,38 @@ Simplify C# extensions for ARMA
 ```PM> Install-Package Arma3.DllExport```
 
 ```csharp
+using Arma3.DllExport;
+using System.Text;
+
 namespace TestExtension
 {
-    internal class EntryPoint
+    public static class EntryPoint
     {
         [ArmaDllExport(ArmaExport.RVExtensionVersion)]
-        public static string Version()
+        public static void RVExtensionVersion(StringBuilder output, int outputSize)
         {
-            return "TestExtension v1.0 - LOADED!";
+            // Write the response directly into the buffer provided by Arma 3.
+            output.Append("TestExtension v1.0 - LOADED!");
         }
 
         [ArmaDllExport(ArmaExport.RVExtension)]
-        public static string Invoke(string input, int size)
+        public static void RVExtension(StringBuilder output, int outputSize, string function)
         {
-            return input;
+            // Write the response directly into the buffer.
+            switch (function.ToLower())
+            {
+                case "ping":
+                    output.Append("pong");
+                    break;
+
+                case "getservertime":
+                    output.Append(System.DateTime.Now.ToString("HH:mm:ss"));
+                    break;
+
+                default:
+                    output.Append("Unknown command");
+                    break;
+            }
         }
     }
 }

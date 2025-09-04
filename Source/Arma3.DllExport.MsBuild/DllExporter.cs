@@ -179,7 +179,7 @@ namespace Arma3.DllExport.MsBuild
         private void InjectRVExtensionWrapper(MethodDefinition userMethod, string wrapperMethodName)
         {
             var wrapperClass = GetOrCreateWrapperClass();
-            var voidRef = Module.Import(typeof(void));
+            var voidRef = Module.ImportReference(typeof(void));
 
             var method = new MethodDefinition(
                 wrapperMethodName,
@@ -187,32 +187,28 @@ namespace Arma3.DllExport.MsBuild
                 voidRef
             );
 
-            method.Parameters.Add(new ParameterDefinition("output", ParameterAttributes.None, Module.Import(typeof(StringBuilder))));
-            method.Parameters.Add(new ParameterDefinition("outputSize", ParameterAttributes.None, Module.Import(typeof(int))));
-            method.Parameters.Add(new ParameterDefinition("function", ParameterAttributes.None, Module.Import(typeof(string))) { MarshalInfo = new MarshalInfo(NativeType.LPStr) });
-
-            // Apply __stdcall calling convention
+            method.Parameters.Add(new ParameterDefinition("output", ParameterAttributes.None, Module.ImportReference(typeof(StringBuilder))));
+            method.Parameters.Add(new ParameterDefinition("outputSize", ParameterAttributes.None, Module.ImportReference(typeof(int))));
+            method.Parameters.Add(new ParameterDefinition("function", ParameterAttributes.None, Module.ImportReference(typeof(string))) { MarshalInfo = new MarshalInfo(NativeType.LPStr) });
             method.CallingConvention = MethodCallingConvention.StdCall;
 
             var il = method.Body.GetILProcessor();
-            il.Append(Instruction.Create(OpCodes.Ldarg_0)); // output StringBuilder
-            il.Append(Instruction.Create(OpCodes.Ldarg_2)); // function string
-            il.Append(Instruction.Create(OpCodes.Call, userMethod)); // Call user's static method
-
-            // Append the result string to the output StringBuilder
-            var appendMethod = Module.Import(typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) }));
-            il.Append(Instruction.Create(OpCodes.Callvirt, appendMethod));
-            il.Append(Instruction.Create(OpCodes.Pop));
+            // This is the change: Pass all arguments directly to the user's method.
+            il.Append(Instruction.Create(OpCodes.Ldarg_0)); // output
+            il.Append(Instruction.Create(OpCodes.Ldarg_1)); // outputSize
+            il.Append(Instruction.Create(OpCodes.Ldarg_2)); // function
+            il.Append(Instruction.Create(OpCodes.Call, userMethod)); // Call void UserMethod(StringBuilder, int, string)
             il.Append(Instruction.Create(OpCodes.Ret));
 
             wrapperClass.Methods.Add(method);
         }
 
         // Wrapper for: void __stdcall RVExtensionVersion(char *output, int outputSize);
+        // Wrapper for: void __stdcall RVExtensionVersion(char *output, int outputSize);
         private void InjectRVExtensionVersionWrapper(MethodDefinition userMethod, string wrapperMethodName)
         {
             var wrapperClass = GetOrCreateWrapperClass();
-            var voidRef = Module.Import(typeof(void));
+            var voidRef = Module.ImportReference(typeof(void));
 
             var method = new MethodDefinition(
                 wrapperMethodName,
@@ -220,16 +216,15 @@ namespace Arma3.DllExport.MsBuild
                 voidRef
             );
 
-            method.Parameters.Add(new ParameterDefinition("output", ParameterAttributes.None, Module.Import(typeof(StringBuilder))));
-            method.Parameters.Add(new ParameterDefinition("outputSize", ParameterAttributes.None, Module.Import(typeof(int))));
+            method.Parameters.Add(new ParameterDefinition("output", ParameterAttributes.None, Module.ImportReference(typeof(StringBuilder))));
+            method.Parameters.Add(new ParameterDefinition("outputSize", ParameterAttributes.None, Module.ImportReference(typeof(int))));
             method.CallingConvention = MethodCallingConvention.StdCall;
 
             var il = method.Body.GetILProcessor();
+            // This is the change: Pass all arguments directly to the user's method.
             il.Append(Instruction.Create(OpCodes.Ldarg_0)); // output
-            il.Append(Instruction.Create(OpCodes.Call, userMethod)); // Call user's static method which must return a string
-            var appendMethod = Module.Import(typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) }));
-            il.Append(Instruction.Create(OpCodes.Callvirt, appendMethod));
-            il.Append(Instruction.Create(OpCodes.Pop));
+            il.Append(Instruction.Create(OpCodes.Ldarg_1)); // outputSize
+            il.Append(Instruction.Create(OpCodes.Call, userMethod)); // Call void UserMethod(StringBuilder, int)
             il.Append(Instruction.Create(OpCodes.Ret));
 
             wrapperClass.Methods.Add(method);
@@ -239,7 +234,7 @@ namespace Arma3.DllExport.MsBuild
         private void InjectRVExtensionArgsWrapper(MethodDefinition userMethod, string wrapperMethodName)
         {
             var wrapperClass = GetOrCreateWrapperClass();
-            var intRef = Module.Import(typeof(int));
+            var intRef = Module.ImportReference(typeof(int));
 
             var method = new MethodDefinition(
                 wrapperMethodName,
@@ -247,15 +242,15 @@ namespace Arma3.DllExport.MsBuild
                 intRef // Returns int
             );
 
-            method.Parameters.Add(new ParameterDefinition("output", ParameterAttributes.None, Module.Import(typeof(StringBuilder))));
-            method.Parameters.Add(new ParameterDefinition("outputSize", ParameterAttributes.None, Module.Import(typeof(int))));
-            method.Parameters.Add(new ParameterDefinition("function", ParameterAttributes.None, Module.Import(typeof(string))) { MarshalInfo = new MarshalInfo(NativeType.LPStr) });
+            method.Parameters.Add(new ParameterDefinition("output", ParameterAttributes.None, Module.ImportReference(typeof(StringBuilder))));
+            method.Parameters.Add(new ParameterDefinition("outputSize", ParameterAttributes.None, Module.ImportReference(typeof(int))));
+            method.Parameters.Add(new ParameterDefinition("function", ParameterAttributes.None, Module.ImportReference(typeof(string))) { MarshalInfo = new MarshalInfo(NativeType.LPStr) });
 
             // For const char** argv, we'll pass it as an IntPtr and marshal it in C#
-            var stringArrayType = new PointerType(Module.Import(typeof(string)));
+            var stringArrayType = new PointerType(Module.ImportReference(typeof(string)));
             method.Parameters.Add(new ParameterDefinition("argv", ParameterAttributes.None, stringArrayType) { MarshalInfo = new MarshalInfo(NativeType.LPStr) });
 
-            method.Parameters.Add(new ParameterDefinition("argc", ParameterAttributes.None, Module.Import(typeof(int))));
+            method.Parameters.Add(new ParameterDefinition("argc", ParameterAttributes.None, Module.ImportReference(typeof(int))));
             method.CallingConvention = MethodCallingConvention.StdCall;
 
             var il = method.Body.GetILProcessor();
