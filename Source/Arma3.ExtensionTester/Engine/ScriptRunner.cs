@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 
-namespace Arma3.ExtensionTester
+namespace Arma3.ExtensionTester.Engine
 {
     public static class ScriptRunner
     {

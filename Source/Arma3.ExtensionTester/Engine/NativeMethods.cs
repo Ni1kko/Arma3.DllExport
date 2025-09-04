@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Arma3.ExtensionTester
+namespace Arma3.ExtensionTester.Engine
 {
     internal static class NativeMethods
     {

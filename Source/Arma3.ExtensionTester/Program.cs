@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Drawing;
+using Arma3.ExtensionTester.Engine;
+using Arma3.ExtensionTester.Utils;
 
 #nullable enable
 
@@ -14,13 +17,14 @@ namespace Arma3.ExtensionTester
     public static class Program
     {
         private static readonly Dictionary<string, NativeExtension> s_loadedExtensions = new();
-        private static readonly Dictionary<string, Action<string>> s_commandHandlers = new(StringComparer.OrdinalIgnoreCase);
+        public static readonly Dictionary<string, Action<string>> s_commandHandlers = new(StringComparer.OrdinalIgnoreCase);
         private static NotifyIcon? s_notifyIcon;
+        private static Player? s_player;
+        private static ScriptingEngine? s_scriptingEngine;
 
         [STAThread]
         public static void Main(string[] args)
         {
-            // Initialize the notification icon
             s_notifyIcon = new NotifyIcon
             {
                 Icon = SystemIcons.Information,
@@ -29,8 +33,20 @@ namespace Arma3.ExtensionTester
 
             Console.Title = Environment.Is64BitProcess ? "Arma 3 Extension Tester (x64)" : "Arma 3 Extension Tester (x86)";
             Console.WriteLine($"// {Console.Title}");
+            Console.WriteLine($"// Created by: Ni1kko - Make Arma Not War <3");
+
+            SteamManager.Init();
+            s_player = new Player();
+            if (SteamManager.IsInitialized())
+            {
+                s_player.SteamID = SteamManager.GetSteamID();
+                Console.WriteLine($"// Player initialized. SteamID: {s_player.SteamID}");
+            }
+
+
             Console.WriteLine("// Type 'exit' to close, or 'help' for commands.");
 
+            s_scriptingEngine = new ScriptingEngine();
             SetupCommands();
 
             if (args.Length > 0 && File.Exists(args[0]))
@@ -38,25 +54,68 @@ namespace Arma3.ExtensionTester
                 ScriptRunner.Execute(args[0]);
             }
 
+            var inputBuilder = new StringBuilder();
+            bool inMultiLineBlock = false;
+            string? multiLineVarName = null;
+
             while (true)
             {
-                Console.Write("> ");
-                var input = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(input)) continue;
+                Console.Write(inMultiLineBlock ? ". " : "> ");
+                var line = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(line)) continue;
 
-                if (input.Trim().Equals("exit", StringComparison.OrdinalIgnoreCase))
+                if (line.Trim().Equals("exit", StringComparison.OrdinalIgnoreCase))
                 {
                     break;
                 }
 
-                ProcessCommand(input);
+                if (inMultiLineBlock)
+                {
+                    if (line.Trim() == "};")
+                    {
+                        inputBuilder.AppendLine(line);
+                        var codeBlock = inputBuilder.ToString();
+
+                        var codeBlockContent = codeBlock.Substring(codeBlock.IndexOf('{') + 1);
+                        codeBlockContent = codeBlockContent.Substring(0, codeBlockContent.LastIndexOf("};")).Trim();
+
+                        if (multiLineVarName != null)
+                        {
+                            s_scriptingEngine.SetVariable(multiLineVarName, codeBlockContent);
+                            Console.WriteLine($"// Code block assigned to '{multiLineVarName}'");
+                        }
+
+                        inMultiLineBlock = false;
+                        inputBuilder.Clear();
+                        multiLineVarName = null;
+                    }
+                    else
+                    {
+                        inputBuilder.AppendLine(line);
+                    }
+                }
+                else
+                {
+                    var multiLineMatch = Regex.Match(line, @"^(.+?)\s*=\s*{");
+                    if (multiLineMatch.Success)
+                    {
+                        inMultiLineBlock = true;
+                        multiLineVarName = multiLineMatch.Groups[1].Value.Trim();
+                        inputBuilder.AppendLine("{");
+                    }
+                    else
+                    {
+                        ProcessCommand(line);
+                    }
+                }
             }
 
             foreach (var ext in s_loadedExtensions.Values)
             {
                 ext.Dispose();
             }
-            s_notifyIcon?.Dispose(); // Clean up the notification icon
+            s_notifyIcon?.Dispose();
+            SteamManager.Shutdown();
         }
 
         private static void ShowNotification(string title, string message)
@@ -64,8 +123,6 @@ namespace Arma3.ExtensionTester
             if (s_notifyIcon == null) return;
             s_notifyIcon.Visible = true;
             s_notifyIcon.ShowBalloonTip(3000, title, message, ToolTipIcon.Info);
-            // A timer to hide the icon after the tip is gone would be ideal in a real app,
-            // but for this console tool, we can leave it.
         }
 
         private static void SetupCommands()
@@ -90,11 +147,31 @@ namespace Arma3.ExtensionTester
                 if (match.Success) CallExtensionVersion(match.Groups["name"].Value);
                 else Console.WriteLine("Error: Invalid callExtension syntax. Use: callExtension \"<name>\"");
             };
-
-            // Engine Commands using NotifyIcon
+            s_commandHandlers["getPlayerUID"] = arg =>
+            {
+                if (s_player != null)
+                {
+                    Console.WriteLine($"\"{s_player.SteamID}\"");
+                }
+                else
+                {
+                    Console.WriteLine("\"\"");
+                }
+            };
+            s_commandHandlers["profileName"] = _ =>
+            {
+                if (s_player != null)
+                {
+                    Console.WriteLine($"\"{s_player.Name}\"");
+                }
+                else
+                {
+                    Console.WriteLine("\"\"");
+                }
+            };
             s_commandHandlers["hint"] = arg => {
-                var match = Regex.Match(arg, @"^""(.*)""");
-                if (match.Success) ShowNotification("Arma 3 Hint", match.Groups[1].Value);
+                var evaluated = s_scriptingEngine?.EvaluateExpression(arg, new Dictionary<string, object>()) as string ?? arg;
+                ShowNotification("Arma 3 Hint", evaluated);
             };
             s_commandHandlers["systemchat"] = arg => {
                 var match = Regex.Match(arg, @"^""(.*)""");
@@ -113,24 +190,34 @@ namespace Arma3.ExtensionTester
                 var match = Regex.Match(arg, @"^""(.*)""");
                 if (match.Success) System.Windows.Forms.Clipboard.SetText(match.Groups[1].Value);
             };
-            s_commandHandlers["format"] = arg =>
+            s_commandHandlers["isNil"] = arg =>
             {
-                try
+                var match = Regex.Match(arg, @"^""([^""]*)""");
+                if (match.Success)
                 {
-                    var parsed = SqfArrayParser.Parse(arg);
-                    if (parsed.Count < 1 || !(parsed[0] is string formatStr))
-                    {
-                        Console.WriteLine("Error: format requires a format string as the first argument.");
-                        return;
-                    }
-
-                    var formatArgs = parsed.Skip(1).Select(SqfArrayParser.ToSqfString).ToArray();
-                    var result = string.Format(formatStr.Replace("%", "{").Replace("}", "}}"), formatArgs);
-                    Console.WriteLine("\"" + result.Replace("\"", "\"\"") + "\"");
+                    var varName = match.Groups[1].Value;
+                    var result = s_scriptingEngine?.GetVariable(varName) == null;
+                    Console.WriteLine(result.ToString().ToLower());
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Error during format: {ex.Message}");
+                    Console.WriteLine("true");
+                }
+            };
+            s_commandHandlers["call"] = arg =>
+            {
+                object? variable = s_scriptingEngine?.GetVariable(arg.Trim());
+                if (variable is string code)
+                {
+                    var result = s_scriptingEngine?.Execute(code);
+                    if (result != null)
+                    {
+                        Console.WriteLine(SqfArrayParser.ToSqfString(result));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Error: Variable is not a code block or does not exist.");
                 }
             };
         }
@@ -139,8 +226,6 @@ namespace Arma3.ExtensionTester
         {
             command = command.Trim();
 
-            // ** THE FIX IS HERE **
-            // Strip trailing semicolon if it exists, to support SQF-like syntax
             if (command.EndsWith(";"))
             {
                 command = command.Substring(0, command.Length - 1).TrimEnd();
@@ -175,7 +260,12 @@ namespace Arma3.ExtensionTester
                 }
                 else
                 {
-                    Console.WriteLine($"Error: Unknown command or syntax: '{command}'");
+                    // If not a known command, try executing as a script line
+                    var result = s_scriptingEngine?.Execute(command);
+                    if (result != null)
+                    {
+                        Console.WriteLine(SqfArrayParser.ToSqfString(result));
+                    }
                 }
             }
             catch (Exception ex)
@@ -196,11 +286,19 @@ namespace Arma3.ExtensionTester
             Console.WriteLine("5. Execute Script:          execVM \"<path_to_script.txt>\"");
             Console.WriteLine("6. Pause Script:            sleep <seconds>");
             Console.WriteLine("\n--- Engine Commands ---");
-            Console.WriteLine("   hint \"<message>\"              (Shows a Windows notification)");
-            Console.WriteLine("   systemChat \"<message>\"        (Shows a Windows notification)");
-            Console.WriteLine("   diag_log \"<message>\"          (Prints a log message to console)");
-            Console.WriteLine("   copyToClipboard \"<text>\"    (Copies text to clipboard)");
-            Console.WriteLine("   format [\"formatStr\", <arg1>] (Formats a string, e.g., format[\"Hello %1\", \"World\"])");
+            Console.WriteLine("   getPlayerUID player       (Gets the player's SteamID64)");
+            Console.WriteLine("   profileName               (Gets the player's name)");
+            Console.WriteLine("   hint \"<message>\"          (Shows a Windows notification)");
+            Console.WriteLine("   systemChat \"<message>\"    (Shows a Windows notification)");
+            Console.WriteLine("   diag_log \"<message>\"      (Prints a log message to console)");
+            Console.WriteLine("   copyToClipboard \"<text>\"(Copies text to clipboard)");
+            Console.WriteLine("   format [\"fmt\", <arg1>]  (Formats a string, e.g., format[\"Hello %1\", \"World\"])");
+            Console.WriteLine("\n--- Scripting ---");
+            Console.WriteLine("   <var> = <value>;                     (e.g., myVar = \"hello\")");
+            Console.WriteLine("   <var> = { <code> };                  (Defines a multi-line code block)");
+            Console.WriteLine("   call <var>;                          (Executes a code block)");
+            Console.WriteLine("   isNil \"<var>\";                       (Checks if a variable is defined)");
+            Console.WriteLine("   <var> is a <namespace> var;         (e.g., myVar is a ui var)");
             Console.WriteLine("\n7. Exit Application:        exit\n");
         }
 

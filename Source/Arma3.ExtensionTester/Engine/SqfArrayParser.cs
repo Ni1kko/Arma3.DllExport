@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Arma3.ExtensionTester
+namespace Arma3.ExtensionTester.Engine
 {
     public static class SqfArrayParser
     {

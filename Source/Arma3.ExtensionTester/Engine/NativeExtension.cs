@@ -4,7 +4,7 @@ using System.Text;
 
 #nullable enable
 
-namespace Arma3.ExtensionTester
+namespace Arma3.ExtensionTester.Engine
 {
     public class NativeExtension : IDisposable
     {
