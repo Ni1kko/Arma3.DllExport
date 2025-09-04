@@ -61,12 +61,8 @@ namespace Arma3.DllExport.MsBuild
             var resolver = new DefaultAssemblyResolver();
             resolver.AddSearchDirectory(Path.GetDirectoryName(target));
 
-            // We pass the resolver to the ReaderParameters and explicitly disable symbol reading.
-            var readerParameters = new ReaderParameters
-            {
-                AssemblyResolver = resolver,
-                ReadSymbols = false
-            };
+            // We pass the resolver to the ReaderParameters.
+            var readerParameters = new ReaderParameters { AssemblyResolver = resolver };
 
             // Read the module from the memory stream instead of the file path.
             Module = ModuleDefinition.ReadModule(memoryStream, readerParameters);
