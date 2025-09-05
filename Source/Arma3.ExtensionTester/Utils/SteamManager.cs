@@ -16,7 +16,7 @@ namespace Arma3.ExtensionTester.Utils
                 // Per the documentation, initialize the native layer first.
                 SteamNative.Initialize();
                 // Then, initialize the managed API.
-                s_initialized = SteamApi.Initialize();
+                s_initialized = SteamApi.Initialize(107410);
             }
             catch (DllNotFoundException e)
             {
