@@ -8,3 +8,7 @@ Nuget/build/Mono.Cecil.Pdb.dll
 Nuget/build/Mono.Cecil.pdb
 Nuget/build/Mono.Cecil.Mdb.pdb
 Nuget/build/Mono.Cecil.Mdb.dll
+/Source/Arma3.DllExport.MsBuild.Tests/obj
+/Source/Arma3.TestExtension/bin
+/Source/Arma3.TestExtension/obj
+/Source/Arma3.TestExtension/packages

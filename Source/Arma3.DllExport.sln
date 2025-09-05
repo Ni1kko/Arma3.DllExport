@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3.DllExport", "Arma3.Dl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3.DllExport.MsBuild", "Arma3.DllExport.MsBuild\Arma3.DllExport.MsBuild.csproj", "{203924DD-B8D3-4D38-92B3-B01A5ACB778D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{301D5EF6-86C6-4FA0-932D-97A53DCE8AC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3.DllExport.MsBuild.Tests", "Arma3.DllExport.MsBuild.Tests\Arma3.DllExport.MsBuild.Tests.csproj", "{301D5EF6-86C6-4FA0-932D-97A53DCE8AC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExtension", "Arma3_TestExtension\TestExtension.csproj", "{B9407F3D-FF26-491C-AD64-F337BB37A68D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestExtension", "Arma3.TestExtension\TestExtension.csproj", "{B9407F3D-FF26-491C-AD64-F337BB37A68D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arma3.ExtensionTester", "Arma3.ExtensionTester\Arma3.ExtensionTester.csproj", "{47737E40-A254-4B60-A8AA-B18CA925863F}"
 EndProject
