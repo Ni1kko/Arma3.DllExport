@@ -1,5 +1,6 @@
 ﻿using System;
-using Steamworks;
+using SteamworksSharp;
+using SteamworksSharp.Native;
 
 namespace Arma3.ExtensionTester.Utils
 {
@@ -12,12 +13,15 @@ namespace Arma3.ExtensionTester.Utils
         {
             try
             {
-                s_initialized = SteamAPI.Init();
+                // Per the documentation, initialize the native layer first.
+                SteamNative.Initialize();
+                // Then, initialize the managed API.
+                s_initialized = SteamApi.Initialize();
             }
             catch (DllNotFoundException e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"// ERROR: {e.Message}. Could not find steam_api64.dll.");
+                Console.WriteLine($"// ERROR: {e.Message}. Could not find steam_api.dll.");
                 Console.ResetColor();
                 s_initialized = false;
                 return false;
@@ -32,19 +36,10 @@ namespace Arma3.ExtensionTester.Utils
                 return false;
             }
 
-            Console.WriteLine("// SteamManager initialized successfully.");
-            s_steamId = SteamUser.GetSteamID().m_SteamID;
+            Console.WriteLine("// SteamManager initialized successfully with SteamworksSharp.");
+            s_steamId = SteamApi.SteamUser.GetSteamID();
             return true;
         }
-
-        public static void Shutdown()
-        {
-            if (s_initialized)
-            {
-                SteamAPI.Shutdown();
-            }
-        }
-
 
         public static ulong GetSteamID()
         {

@@ -16,7 +16,7 @@ namespace Arma3.ExtensionTester
 {
     public static class Program
     {
-        private static readonly Dictionary<string, NativeExtension> s_loadedExtensions = new();
+        private static readonly Dictionary<string, NativeExtension> s_loadedExtensions = [];
         public static readonly Dictionary<string, Action<string>> s_commandHandlers = new(StringComparer.OrdinalIgnoreCase);
         private static NotifyIcon? s_notifyIcon;
         private static Player? s_player;
@@ -115,7 +115,6 @@ namespace Arma3.ExtensionTester
                 ext.Dispose();
             }
             s_notifyIcon?.Dispose();
-            SteamManager.Shutdown();
         }
 
         private static void ShowNotification(string title, string message)
@@ -170,7 +169,7 @@ namespace Arma3.ExtensionTester
                 }
             };
             s_commandHandlers["hint"] = arg => {
-                var evaluated = s_scriptingEngine?.EvaluateExpression(arg, new Dictionary<string, object>()) as string ?? arg;
+                var evaluated = s_scriptingEngine?.EvaluateExpression(arg, []) as string ?? arg;
                 ShowNotification("Arma 3 Hint", evaluated);
             };
             s_commandHandlers["systemchat"] = arg => {
@@ -250,7 +249,7 @@ namespace Arma3.ExtensionTester
                     return;
                 }
 
-                var parts = command.Split(new[] { ' ' }, 2);
+                var parts = command.Split([' '], 2);
                 var cmd = parts[0];
                 var args = parts.Length > 1 ? parts[1].Trim() : string.Empty;
 
@@ -368,7 +367,7 @@ namespace Arma3.ExtensionTester
             try
             {
                 var parsed = SqfArrayParser.Parse(argsString);
-                if (parsed.Count == 0 || !(parsed[0] is string function))
+                if (parsed.Count == 0 || parsed[0] is not string function)
                     throw new FormatException("Expected format: [\"<function>\", ...]");
 
                 var args = new string[0];
